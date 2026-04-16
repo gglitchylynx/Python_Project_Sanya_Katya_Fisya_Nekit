@@ -1,0 +1,30 @@
+<?xml version='1.0'?>
+<robot name="diff_drive" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:macro name="wheel" params="side x y z">
+    <link name='wheel_${side}'>
+      <visual name='wheel_${side}_visual'>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <cylinder length="0.05" radius="0.1"/>
+        </geometry>
+        <material name="black"/>
+      </visual>
+      <xacro:inertial_cylinder mass="0.1" length="0.05" radius="0.1">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      </xacro:inertial_cylinder>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <cylinder radius="0.1" length="0.05"/>
+        </geometry>
+      </collision>
+    </link>
+    <joint name="wheel_${side}_joint" type="continuous">
+      <origin xyz="${x} ${y} ${z}" rpy="${-pi/2} 0 0"/>
+      <parent link="base_link"/>
+      <child link="wheel_${side}"/>
+      <axis xyz="0 0 1"/>
+      <limit effort="50" velocity="100"/>
+    </joint>
+  </xacro:macro>
+</robot>

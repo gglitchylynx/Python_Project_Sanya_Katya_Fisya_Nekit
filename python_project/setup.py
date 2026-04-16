@@ -15,13 +15,22 @@ setup(
         (os.path.join('share', package_name, 'launch'), glob('launch/*.launch.py')),
         (os.path.join('share', package_name, 'config'), glob('config/*')),
         (os.path.join('share', package_name, 'worlds'), glob('worlds/*')),
+        (os.path.join('share', package_name, 'urdf'), glob('urdf/*')),
+        (os.path.join('share', package_name, 'rviz'), glob('rviz/*')),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
     maintainer='empty',
     maintainer_email='empty@empty.com',
-    description='python_project_restruct',
+    description='',
     license='Apache License 2.0',
     tests_require=['pytest'],
-
+    entry_points={
+        'console_scripts': [
+            'control_node = ros_project_scene.control_node:main',
+            'lidar_data_proc = ros_project_scene.lidar_data_proc:main',
+            'sensor_data_proc = ros_project_scene.sensor_data_proc:main',
+            'lidar_logger = ros_project_scene.lidar_logger:main'
+        ],
+    },
 )

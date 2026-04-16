@@ -12,6 +12,7 @@ def generate_launch_description():
     pkg_ros_gz_sim = get_package_share_directory('ros_gz_sim')
     pkg_lab = get_package_share_directory('python_project')
 
+    xacro_file = os.path.join(pkg_lab, 'urdf', 'robot_model.xacro')
     world_path = PathJoinSubstitution([
         FindPackageShare('python_project'),
         'worlds', 'simple.world'
@@ -33,6 +34,13 @@ def generate_launch_description():
         }]
     )
 
+    spawn = Node(
+        package='ros_gz_sim',
+        executable='create',
+        arguments=['-name', 'diff_drive', '-topic', 'robot_description', '-x', '1.5', '-y', '1', '-z', '0.2'],
+        output='screen'
+    )
+
     bridge = Node(
         package='ros_gz_bridge',
         executable='parameter_bridge',
@@ -43,8 +51,35 @@ def generate_launch_description():
         output='screen'
     )
 
+    control_node = Node(
+        package='ros_project_scene',
+        executable='control_node',
+        name='intelligent_controller',
+        output='screen'
+    )
+
+    lidar_logger = Node(
+        package='ros_project_scene',
+        executable='lidar_logger',
+        name='lidar_logger',
+        output='screen'
+    )
+
+    camera_viewer = Node(
+        package='image_view',
+        executable='image_view',
+        arguments=['--ros-args', '--remap', 'image:=/camera/image_raw'],
+        output='screen'
+    )
+
+
     return LaunchDescription([
+        DeclareLaunchArgument('urdf_model', default_value=xacro_file),
         gz_sim,
         bridge,
+        spawn,
         robot_state_publisher,
+        control_node,
+        lidar_logger,
+        camera_viewer,
     ])
